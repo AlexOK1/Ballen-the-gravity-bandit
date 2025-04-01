@@ -22,7 +22,7 @@ public class enemyPatrol : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector2 direction = currentPoint.position - transform.position;
+        Vector2 point = currentPoint.position - transform.position;
         if(currentPoint == PointB.transform)
         {
             rb .velocity = new Vector2(speed, 0);
