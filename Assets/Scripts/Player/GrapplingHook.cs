@@ -2,77 +2,54 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GrapplingHook : MonoBehaviour
+public class Grapplinghook : MonoBehaviour
 {
     public Camera mainCamera;
     public LineRenderer _lineRenderer;
     public SpringJoint2D _springJoint;
     private Rigidbody2D _rb;
 
-    public float maxGrappleDistance = 7f; // Max distance for grapple
-    public float grappleDamping = 0.8f; // Higher value = less swing bounce
-    public float grappleFrequency = 1.5f; // Higher value = stiffer rope
-    public LayerMask groundLayer; // To detect surfaces for grappling
-
-    private bool hasJumped = false;
-    private bool isGrappling = false;
-
     void Start()
     {
         _springJoint.enabled = false;
         _rb = GetComponent<Rigidbody2D>();
+
+
+        // Optional, but helps if line isn't showing
+    _lineRenderer.positionCount = 2;
+    _lineRenderer.startWidth = 0.05f;
+    _lineRenderer.endWidth = 0.05f;
+    _lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+    _lineRenderer.startColor = Color.white;
+    _lineRenderer.endColor = Color.white;
     }
 
     void Update()
     {
-        // Check if the player is on the ground
-        bool isGrounded = Physics2D.Raycast(transform.position, Vector2.down, 1f, groundLayer);
-
-        // Reset jump status when on the ground
-        if (isGrounded)
-        {
-            hasJumped = false;
-        }
-
-        // Detect if the player has jumped
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
-        {
-            hasJumped = true; // Player is now airborne
-        }
-
-        // Start grappling if holding Mouse0 and player has jumped
-        if (Input.GetKey(KeyCode.Mouse0) && hasJumped)
+        if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             Vector2 mousePos = (Vector2)mainCamera.ScreenToWorldPoint(Input.mousePosition);
-            float distance = Vector2.Distance(transform.position, mousePos);
 
-            if (distance <= maxGrappleDistance) // Check if within range
-            {
-                _springJoint.connectedAnchor = mousePos;
-                _springJoint.enabled = true;
-                isGrappling = true;
+            _rb.velocity = Vector2.zero; // Reset velocity to avoid weird forces
 
-                _springJoint.autoConfigureDistance = false;
-                _springJoint.distance = distance * 0.9f; // Some slack for smoother swing
-                _springJoint.frequency = grappleFrequency; // Adjust elasticity
-                _springJoint.dampingRatio = grappleDamping; // Adjust damping (less bounce)
+            _springJoint.connectedAnchor = mousePos;
+            _springJoint.enabled = true;
 
-                // Set line renderer positions
-                _lineRenderer.SetPosition(0, mousePos);
-                _lineRenderer.SetPosition(1, transform.position);
-                _lineRenderer.enabled = true;
-            }
+            _springJoint.distance = Vector2.Distance(transform.position, mousePos);
+            _springJoint.frequency = 0.5f; // Controls how bouncy the hook is
+            _springJoint.dampingRatio = 0.3f; // Adds some resistance
+
+            _lineRenderer.SetPosition(0, mousePos);
+            _lineRenderer.SetPosition(1, transform.position);
+            _lineRenderer.enabled = true;
         }
-        else
+        else if (Input.GetKeyUp(KeyCode.Mouse0))
         {
-            // Stop grappling when Mouse0 is released
             _springJoint.enabled = false;
             _lineRenderer.enabled = false;
-            isGrappling = false;
         }
 
-        // Update the line renderer position while swinging
-        if (isGrappling)
+        if (_springJoint.enabled)
         {
             _lineRenderer.SetPosition(1, transform.position);
         }
