@@ -6,50 +6,58 @@ public class Grapplinghook : MonoBehaviour
 {
     public Camera mainCamera;
     public LineRenderer _lineRenderer;
-    public SpringJoint2D _springJoint;
+    public DistanceJoint2D _distanceJoint;
     private Rigidbody2D _rb;
+
+    [SerializeField] private float maxGrappleDistance = 10f;
 
     void Start()
     {
-        _springJoint.enabled = false;
+        _distanceJoint.enabled = false;
         _rb = GetComponent<Rigidbody2D>();
 
-
-        // Optional, but helps if line isn't showing
-    _lineRenderer.positionCount = 2;
-    _lineRenderer.startWidth = 0.05f;
-    _lineRenderer.endWidth = 0.05f;
-    _lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
-    _lineRenderer.startColor = Color.white;
-    _lineRenderer.endColor = Color.white;
+        _lineRenderer.positionCount = 2;
+        _lineRenderer.startWidth = 0.05f;
+        _lineRenderer.endWidth = 0.05f;
+        _lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+        _lineRenderer.startColor = Color.white;
+        _lineRenderer.endColor = Color.white;
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            Vector2 mousePos = (Vector2)mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 mouseWorldPos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 direction = mouseWorldPos - (Vector2)transform.position;
 
-            _rb.velocity = Vector2.zero; // Reset velocity to avoid weird forces
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, direction.normalized, maxGrappleDistance, LayerMask.GetMask("Ground"));
 
-            _springJoint.connectedAnchor = mousePos;
-            _springJoint.enabled = true;
+            if (hit.collider != null)
+            {
+                Debug.Log("Grapple hit: " + hit.collider.name);
 
-            _springJoint.distance = Vector2.Distance(transform.position, mousePos);
-            _springJoint.frequency = 0.5f; // Controls how bouncy the hook is
-            _springJoint.dampingRatio = 0.3f; // Adds some resistance
+                _distanceJoint.enabled = true;
+                _distanceJoint.connectedAnchor = hit.point;
+                _distanceJoint.autoConfigureDistance = false;
+                _distanceJoint.distance = Vector2.Distance(transform.position, hit.point);
 
-            _lineRenderer.SetPosition(0, mousePos);
-            _lineRenderer.SetPosition(1, transform.position);
-            _lineRenderer.enabled = true;
+                _lineRenderer.SetPosition(0, hit.point);
+                _lineRenderer.SetPosition(1, transform.position);
+                _lineRenderer.enabled = true;
+            }
+            else
+            {
+                Debug.Log("No valid grapple target.");
+            }
         }
         else if (Input.GetKeyUp(KeyCode.Mouse0))
         {
-            _springJoint.enabled = false;
+            _distanceJoint.enabled = false;
             _lineRenderer.enabled = false;
         }
 
-        if (_springJoint.enabled)
+        if (_distanceJoint.enabled)
         {
             _lineRenderer.SetPosition(1, transform.position);
         }
