@@ -1,56 +1,58 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    public GameObject followObject;
-    public Vector2 followOffset;
+    [Header("Target")]
+    public Transform followTarget;
 
-    public float speed = 3f;
-    private Vector2 threshold;
+    [Header("Camera Follow Settings")]
+    public Vector2 followOffset = Vector2.zero;
+    public float followSpeed = 15f;
+
+    [Header("Look Ahead Settings")]
+    public bool enableLookAhead = true;
+    public float lookAheadDistance = 2f;
+    public float lookAheadSmoothing = 0.1f;
+
+    private Vector3 currentVelocity = Vector3.zero;
+    private Vector3 lookAheadPos = Vector3.zero;
     private Rigidbody2D rb;
 
-    // Start is called before the first frame update
     void Start()
     {
-        threshold = calculatedThreshold();
-        rb = followObject.GetComponent<Rigidbody2D>();
-    }
-
-    // Update is called once per frame
-    void FixedUpdate()
-    {  
-        Vector2 follow = followObject.transform.position;
-        float xDifference = Vector2.Distance(Vector2.right * transform.position.x, Vector2.right * follow.x);
-        float yDifference = Vector2.Distance(Vector2.up * transform.position.y, Vector2.up * follow.y);
-
-        Vector3 newPosition = transform.position;
-        if(Mathf.Abs(xDifference) >= threshold.x) {
-            newPosition.x = follow.x;
-        }
-        if(Mathf.Abs(yDifference) >= threshold.y) {
-            newPosition.y = follow.y;
-        }
-        float moveSpeed = rb.velocity.magnitude > speed ? rb.velocity.magnitude : speed;
-        transform.position = Vector3.MoveTowards(transform.position, newPosition, moveSpeed * Time.deltaTime);
-
-}
-private Vector3 calculatedThreshold()
+        if (followTarget == null)
         {
-            Rect aspect  = Camera.main.pixelRect;
-            Vector2 t = new Vector2(Camera.main.orthographicSize * aspect.width / aspect.height, Camera.main.orthographicSize);
-            t.x -= followOffset.x;
-            t.y -= followOffset.y;
-            return t; 
+            Debug.LogError("CameraFollow: No follow target assigned!");
+            return;
         }
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.blue;
-        Vector2 border = calculatedThreshold();
-        Gizmos.DrawWireCube(transform.position, new Vector3(border.x * 2, border.y * 2, 1));
 
+        rb = followTarget.GetComponent<Rigidbody2D>();
+        if (rb == null)
+        {
+            Debug.LogWarning("CameraFollow: No Rigidbody2D found on target. Look-ahead will be disabled.");
+            enableLookAhead = false;
+        }
     }
 
+    void FixedUpdate()
+    {
+        if (followTarget == null) return;
+
+        Vector3 targetPosition = followTarget.position + (Vector3)followOffset;
+
+        if (enableLookAhead && rb != null)
+        {
+            Vector3 targetLookAhead = Vector3.right * Mathf.Sign(rb.velocity.x) * lookAheadDistance;
+            lookAheadPos = Vector3.SmoothDamp(lookAheadPos, targetLookAhead, ref currentVelocity, lookAheadSmoothing);
+        }
+        else
+        {
+            lookAheadPos = Vector3.zero;
+        }
+
+        Vector3 desiredPosition = targetPosition + lookAheadPos;
+        desiredPosition.z = transform.position.z; // Keep the current camera Z (for 2D)
+
+        transform.position = Vector3.Lerp(transform.position, desiredPosition, followSpeed * Time.fixedDeltaTime);
+    }
 }
