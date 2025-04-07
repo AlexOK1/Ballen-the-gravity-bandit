@@ -1971,6 +1971,7 @@ GameObject:
   m_Component:
   - component: {fileID: 472064487}
   - component: {fileID: 472064488}
+  - component: {fileID: 472064489}
   m_Layer: 0
   m_Name: Bagerstegrund
   m_TagString: Untagged
@@ -2045,6 +2046,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &472064489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 472064486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 876f1acd90208b14fbe695936c690f69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cam: {fileID: 615841401}
+  parallexEffect: 0.8
 --- !u!1 &615841401
 GameObject:
   m_ObjectHideFlags: 0
@@ -2682,6 +2697,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1480719064}
   - component: {fileID: 1480719065}
+  - component: {fileID: 1480719066}
   m_Layer: 0
   m_Name: Mellemgrund
   m_TagString: Untagged
@@ -2744,7 +2760,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 1c7fea140803941c7a64a8ecf24a148d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -2756,6 +2772,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1480719066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1480719063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 876f1acd90208b14fbe695936c690f69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cam: {fileID: 0}
+  parallexEffect: 0.4
 --- !u!1 &1598700676
 GameObject:
   m_ObjectHideFlags: 0
@@ -3097,8 +3127,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 615841403}
   _lineRenderer: {fileID: 1934823553}
+<<<<<<< Updated upstream
   _distanceJoint: {fileID: 1934823554}
   maxGrappleDistance: 5
+=======
+  _distanceJoint: {fileID: 0}
+  maxGrappleDistance: 10
+>>>>>>> Stashed changes
 --- !u!120 &1934823553
 LineRenderer:
   serializedVersion: 2
