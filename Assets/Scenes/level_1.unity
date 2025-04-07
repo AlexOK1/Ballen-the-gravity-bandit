@@ -3127,13 +3127,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 615841403}
   _lineRenderer: {fileID: 1934823553}
-<<<<<<< Updated upstream
-  _distanceJoint: {fileID: 1934823554}
-  maxGrappleDistance: 5
-=======
   _distanceJoint: {fileID: 0}
   maxGrappleDistance: 10
->>>>>>> Stashed changes
 --- !u!120 &1934823553
 LineRenderer:
   serializedVersion: 2
