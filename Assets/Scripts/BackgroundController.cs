@@ -4,32 +4,45 @@ using UnityEngine;
 
 public class BackgroundController : MonoBehaviour
 {
-    private float startPos, length;
+    private Vector2 startPos;
+    private Vector2 length;
     public GameObject cam;
-    public float parallexEffect;
+    public Vector2 parallaxEffect;
 
     // Start is called before the first frame update
-    void Start()
+        void Start()
+{
+    startPos = new Vector2(-45f, transform.position.y);
+
+    SpriteRenderer sr = GetComponent<SpriteRenderer>();
+    length = sr.bounds.size;
+}
+
+    void Update()
     {
-        startPos = transform.position.x;
-        length = GetComponent<SpriteRenderer>().bounds.size.x;
-    }
+        Vector2 camPos = cam.transform.position;
 
-    // Update is called once per frame
-    void LateUpdate()
-    {
-        float distance = cam.transform.position.x * parallexEffect; // 0 will move with cam, 1 wont move
-        float movement = cam.transform.position.x * (1- parallexEffect);
+        Vector2 distance = new Vector2(camPos.x * parallaxEffect.x, camPos.y * parallaxEffect.y);
+        Vector2 movement = new Vector2(camPos.x * (1 - parallaxEffect.x), camPos.y * (1 - parallaxEffect.y));
 
-        transform.position = new Vector3(startPos + distance, transform.position.y, transform.position.z);
+        transform.position = new Vector3(startPos.x + distance.x, startPos.y + distance.y, transform.position.z);
 
-        if(movement > startPos + length)
+        if (movement.x > startPos.x + length.x)
         {
-            startPos += length;
+            startPos.x += length.x;
         }
-        else if(movement < startPos - length)
+        else if (movement.x < startPos.x - length.x)
         {
-            startPos -= length;
+            startPos.x -= length.x;
+        }
+
+        if (movement.y > startPos.y + length.y)
+        {
+            startPos.y += length.y;
+        }
+        else if (movement.y < startPos.y - length.y)
+        {
+            startPos.y -= length.y;
         }
     }
 }
