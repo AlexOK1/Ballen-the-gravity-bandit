@@ -2966,7 +2966,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 6
-  jumpForce: 20
+  jumpForce: 10
   groundCheck: {fileID: 1934823550}
   groundLayer:
     serializedVersion: 2
@@ -3097,7 +3097,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 615841403}
   _lineRenderer: {fileID: 1934823553}
-  _springJoint: {fileID: 1934823555}
+  _distanceJoint: {fileID: 1934823554}
+  maxGrappleDistance: 5
 --- !u!120 &1934823553
 LineRenderer:
   serializedVersion: 2
