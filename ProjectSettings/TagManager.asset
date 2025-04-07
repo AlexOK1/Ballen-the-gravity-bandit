@@ -50,3 +50,9 @@ TagManager:
   - name: Spikes
     uniqueID: 531666915
     locked: 0
+  - name: Middleground
+    uniqueID: 2504960401
+    locked: 0
+  - name: Background
+    uniqueID: 3735614949
+    locked: 0
