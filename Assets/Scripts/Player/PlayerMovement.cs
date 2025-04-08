@@ -5,9 +5,9 @@ using UnityEngine;
 public class Movement : MonoBehaviour
 {
     public float moveSpeed = 5f;
-    public float jumpForce = 10f;
-    public float jumpGravity = 0.5f;     // Gravity while going up (should be positive)
-    public float fallGravity = 1.5f;     // Gravity while falling (should be positive)
+    public float jumpForce = 15f;
+    public float jumpGravity = 4f;     // Gravity while going up (should be positive)
+    public float fallGravity = 4f;     // Gravity while falling (should be positive)
     public Transform groundCheck;
     public LayerMask groundLayer;
 
@@ -17,7 +17,7 @@ public class Movement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        rb.gravityScale = 0f; // Disable built-in gravity to apply custom gravity
+        rb.gravityScale = 0f;               // Disable built-in gravity to apply custom gravity
     }
 
     void Update()
@@ -33,6 +33,10 @@ public class Movement : MonoBehaviour
 
         // Jumping
         if (isGrounded && Input.GetKeyDown(KeyCode.Space))
+        {
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+        }
+        if (isGrounded && Input.GetKeyDown(KeyCode.W))
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         }
