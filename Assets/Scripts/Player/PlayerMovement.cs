@@ -4,59 +4,102 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
+    [Header("Movement Settings")]
     public float moveSpeed = 5f;
     public float jumpForce = 15f;
-    public float jumpGravity = 4f;     // Gravity while going up (should be positive)
-    public float fallGravity = 4f;     // Gravity while falling (should be positive)
+
+    [Header("Custom Gravity")]
+    public float jumpGravity = 4f;
+    public float fallGravity = 4f;
+
+    [Header("Ground & Wall Detection")]
     public Transform groundCheck;
+    public Transform wallCheck;
     public LayerMask groundLayer;
+    public LayerMask wallLayer;
+    public float wallCheckRadius = 0.2f;
 
     private Rigidbody2D rb;
     private bool isGrounded;
+    private bool isTouchingWall;
+    private float horizontalInput;
+    private bool jumpQueued = false;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        rb.gravityScale = 0f;               // Disable built-in gravity to apply custom gravity
     }
 
     void Update()
     {
-        // Horizontal input and movement
-        float horizontalInput = Input.GetAxis("Horizontal");
+        // Input
+        horizontalInput = Input.GetAxis("Horizontal");
+        if (Mathf.Abs(horizontalInput) < 0.2f)
+            horizontalInput = 0;
 
-        // Apply horizontal velocity while preserving vertical velocity
+        // Queue jump (input buffering)
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W))
+        {
+            jumpQueued = true;
+        }
+
+        // Ground and wall checks
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
+        isTouchingWall = Physics2D.OverlapCircle(wallCheck.position, wallCheckRadius, wallLayer);
+
+        
+    }
+
+    void FixedUpdate()
+    {
+        // Horizontal movement
         rb.velocity = new Vector2(horizontalInput * moveSpeed, rb.velocity.y);
 
-        // Ground check to see if player can jump
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
-
-        // Jumping
-        if (isGrounded && Input.GetKeyDown(KeyCode.Space))
+        // Stop ground sliding when idle (but not while jumping/falling or against walls)
+        if (horizontalInput == 0 && isGrounded && !isTouchingWall)
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-        }
-        if (isGrounded && Input.GetKeyDown(KeyCode.W))
-        {
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            rb.velocity = new Vector2(0, rb.velocity.y);
         }
 
-        // Apply custom gravity based on whether we are going up or falling
+        // Jump
+        if (jumpQueued && isGrounded)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            jumpQueued = false;
+        }
+        else
+        {
+            jumpQueued = false;
+        }
+
+        // Custom gravity
         ApplyCustomGravity();
     }
 
     void ApplyCustomGravity()
     {
-        // Apply different gravity multiplier for jumping vs falling
         if (rb.velocity.y > 0)
         {
-            // Going up
-            rb.velocity += Vector2.up * Physics2D.gravity.y * (jumpGravity - 1) * Time.deltaTime;
+            rb.velocity += Vector2.up * Physics2D.gravity.y * (jumpGravity - 1) * Time.fixedDeltaTime;
         }
         else if (rb.velocity.y < 0)
         {
-            // Falling down
-            rb.velocity += Vector2.up * Physics2D.gravity.y * (fallGravity - 1) * Time.deltaTime;
+            rb.velocity += Vector2.up * Physics2D.gravity.y * (fallGravity - 1) * Time.fixedDeltaTime;
+        }
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        if (groundCheck != null)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(groundCheck.position, 0.2f);
+        }
+
+        if (wallCheck != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(wallCheck.position, wallCheckRadius);
         }
     }
 }

@@ -9176,12 +9176,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdacb47c4f7644166ad444f4ce14f782, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  followTarget: {fileID: 1934823550}
-  followOffset: {x: 3.47, y: 1}
-  followSpeed: 15
-  enableLookAhead: 0
-  lookAheadDistance: 3
-  lookAheadSmoothing: 1
+  player: {fileID: 1934823546}
+  offset: 3
+  offsetSmoothing: 5
 --- !u!1 &689641614
 GameObject:
   m_ObjectHideFlags: 0
@@ -10513,7 +10510,6 @@ GameObject:
   - component: {fileID: 1934823554}
   - component: {fileID: 1934823553}
   - component: {fileID: 1934823552}
-  - component: {fileID: 1934823555}
   - component: {fileID: 1934823556}
   m_Layer: 0
   m_Name: Player
@@ -10537,7 +10533,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 6
+  m_GravityScale: 1
   m_Material: {fileID: 6200000, guid: 09177254848b63445aeb0f60244547fe, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
@@ -10562,13 +10558,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 6
-  jumpForce: 15
+  jumpForce: 20
   jumpGravity: 4
-  fallGravity: 4
+  fallGravity: 2
   groundCheck: {fileID: 1934823550}
+  wallCheck: {fileID: 0}
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  wallCheckRadius: 0.2
 --- !u!212 &1934823549
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -10827,27 +10828,6 @@ DistanceJoint2D:
   m_AutoConfigureDistance: 0
   m_Distance: 0.005
   m_MaxDistanceOnly: 0
---- !u!231 &1934823555
-SpringJoint2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1934823546}
-  m_Enabled: 1
-  serializedVersion: 4
-  m_EnableCollision: 1
-  m_ConnectedRigidBody: {fileID: 0}
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_BreakAction: 3
-  m_AutoConfigureConnectedAnchor: 0
-  m_Anchor: {x: 89, y: -0.000000027149348}
-  m_ConnectedAnchor: {x: 188.6365, y: -3.83}
-  m_AutoConfigureDistance: 0
-  m_Distance: 0.005
-  m_DampingRatio: 0
-  m_Frequency: 0.1
 --- !u!114 &1934823556
 MonoBehaviour:
   m_ObjectHideFlags: 0

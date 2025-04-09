@@ -1,58 +1,38 @@
 using UnityEngine;
 
-public class CameraFollow : MonoBehaviour
+public class CameraController : MonoBehaviour
 {
-    [Header("Target")]
-    public Transform followTarget;
+    public GameObject player;
+    public float offset = 5f; // Lookahead distance for X-axis
+    public float offsetSmoothing = 5f; // Smoothing speed for camera movement
+    public float yOffset = 2f; // Optional vertical offset for Y-axis (can adjust to taste)
+    public float yFollowMultiplier = 0.5f; // Multiplier to make Y-axis movement slower (half speed)
 
-    [Header("Camera Follow Settings")]
-    public Vector2 followOffset = Vector2.zero;
-    public float followSpeed = 15f;
-
-    [Header("Look Ahead Settings")]
-    public bool enableLookAhead = true;
-    public float lookAheadDistance = 2f;
-    public float lookAheadSmoothing = 0.1f;
-
-    private Vector3 currentVelocity = Vector3.zero;
-    private Vector3 lookAheadPos = Vector3.zero;
+    private Vector3 targetPosition;
     private Rigidbody2D rb;
 
     void Start()
     {
-        if (followTarget == null)
-        {
-            Debug.LogError("CameraFollow: No follow target assigned!");
-            return;
-        }
-
-        rb = followTarget.GetComponent<Rigidbody2D>();
-        if (rb == null)
-        {
-            Debug.LogWarning("CameraFollow: No Rigidbody2D found on target. Look-ahead will be disabled.");
-            enableLookAhead = false;
-        }
+        rb = player.GetComponent<Rigidbody2D>();
     }
 
-    void FixedUpdate()
+    void Update()
     {
-        if (followTarget == null) return;
+        // Start with the player's current position (use current Y position for camera)
+        // Apply yFollowMultiplier to make the Y-axis movement slower
+        targetPosition = new Vector3(player.transform.position.x, player.transform.position.y * yFollowMultiplier + yOffset, transform.position.z);
 
-        Vector3 targetPosition = followTarget.position + (Vector3)followOffset;
-
-        if (enableLookAhead && rb != null)
+        // Check velocity to decide lookahead direction for X-axis
+        if (rb.velocity.x > 0.1f)
         {
-            Vector3 targetLookAhead = Vector3.right * Mathf.Sign(rb.velocity.x) * lookAheadDistance;
-            lookAheadPos = Vector3.SmoothDamp(lookAheadPos, targetLookAhead, ref currentVelocity, lookAheadSmoothing);
+            targetPosition.x += offset; // Moving right
         }
-        else
+        else if (rb.velocity.x < -0.1f)
         {
-            lookAheadPos = Vector3.zero;
+            targetPosition.x -= offset; // Moving left
         }
 
-        Vector3 desiredPosition = targetPosition + lookAheadPos;
-        desiredPosition.z = transform.position.z; // Keep the current camera Z (for 2D)
-
-        transform.position = Vector3.Lerp(transform.position, desiredPosition, followSpeed * Time.fixedDeltaTime);
+        // Smoothly move the camera
+        transform.position = Vector3.Lerp(transform.position, targetPosition, offsetSmoothing * Time.deltaTime);
     }
 }

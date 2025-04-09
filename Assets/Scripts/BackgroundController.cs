@@ -12,7 +12,7 @@ public class BackgroundController : MonoBehaviour
     // Start is called before the first frame update
         void Start()
 {
-    startPos = new Vector2(-45f, transform.position.y);
+    startPos = new Vector2(transform.position.x, transform.position.y);
 
     SpriteRenderer sr = GetComponent<SpriteRenderer>();
     length = sr.bounds.size;
