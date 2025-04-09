@@ -9179,6 +9179,8 @@ MonoBehaviour:
   player: {fileID: 1934823546}
   offset: 3
   offsetSmoothing: 5
+  yOffset: 2
+  yFollowMultiplier: 0.7
 --- !u!1 &689641614
 GameObject:
   m_ObjectHideFlags: 0
