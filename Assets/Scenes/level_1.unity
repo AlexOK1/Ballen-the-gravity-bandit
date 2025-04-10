@@ -10570,7 +10570,13 @@ GameObject:
   - component: {fileID: 1934823554}
   - component: {fileID: 1934823553}
   - component: {fileID: 1934823552}
+<<<<<<< Updated upstream
   - component: {fileID: 1934823555}
+=======
+  - component: {fileID: 1934823556}
+  - component: {fileID: 1934823558}
+  - component: {fileID: 1934823557}
+>>>>>>> Stashed changes
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -10666,9 +10672,9 @@ SpriteRenderer:
   m_SortingLayerID: -1018069151
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 5260661792258078248, guid: 283c8286ff7f8a74082557772d9afce2, type: 3}
+  m_Sprite: {fileID: -1622601295, guid: 483913d2f45c3bd45ab3b89ca0e6c10b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 0.14, y: 0.4}
@@ -10686,8 +10692,13 @@ Transform:
   m_GameObject: {fileID: 1934823546}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< Updated upstream
   m_LocalPosition: {x: -98, y: -3.7, z: 0}
   m_LocalScale: {x: 3, y: 3, z: 3}
+=======
+  m_LocalPosition: {x: -97.69, y: -2.38, z: 0}
+  m_LocalScale: {x: 3.5, y: 3.5, z: 3}
+>>>>>>> Stashed changes
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -10724,11 +10735,11 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.2}
+  m_Offset: {x: 0, y: -0.22}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.49999994, y: 0}
-    oldSize: {x: 0.14, y: 0.4}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.96, y: 0.84}
     newSize: {x: 0.14, y: 0.4}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -10889,12 +10900,18 @@ SpringJoint2D:
   m_Script: {fileID: 11500000, guid: 241abcf019198764da40f652bb143635, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< Updated upstream
 --- !u!1 &1936585853
 GameObject:
+=======
+--- !u!70 &1934823557
+CapsuleCollider2D:
+>>>>>>> Stashed changes
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+<<<<<<< Updated upstream
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1936585855}
@@ -10947,10 +10964,45 @@ MonoBehaviour:
   m_ComponentOwner: {fileID: 491976920}
 --- !u!4 &1936585855
 Transform:
+=======
+  m_GameObject: {fileID: 1934823546}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: -0.42}
+  m_Size: {x: 0.25, y: 0.1}
+  m_Direction: 1
+--- !u!95 &1934823558
+Animator:
+  serializedVersion: 5
+>>>>>>> Stashed changes
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+<<<<<<< Updated upstream
   m_GameObject: {fileID: 1936585853}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -10961,6 +11013,22 @@ Transform:
   - {fileID: 491976920}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+=======
+  m_GameObject: {fileID: 1934823546}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c857703c28d7e2d4c8fb0195ec18116e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+>>>>>>> Stashed changes
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
