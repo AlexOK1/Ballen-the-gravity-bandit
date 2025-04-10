@@ -3,48 +3,48 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class enemyPatrol : MonoBehaviour
-{ public GameObject PointA;
+{
+    public GameObject PointA;
     public GameObject PointB;
     private Rigidbody2D rb;
-    private Animator anim;
     private Transform currentPoint;
     public float speed;
+    private bool movingToPointB = true; // Track which direction the enemy is moving in
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();
-        currentPoint = PointB.transform;
-        //anim.SetBool("isMoving", true);
-
+        currentPoint = PointB.transform; // Start by moving towards PointB
     }
 
     // Update is called once per frame
     void Update()
     {
-        Vector2 point = currentPoint.position - transform.position;
-        if(currentPoint == PointB.transform)
-        {
-            rb .velocity = new Vector2(speed, 0);
+        // Move towards the current point
+        Vector2 direction = (currentPoint.position - transform.position).normalized;
 
-        }
-        else
-        {
-            rb.velocity = new Vector2(-speed, 0);
-        }
+        // Only move on the X-axis: set Y to current Y velocity to prevent vertical movement
+        rb.velocity = new Vector2(direction.x * speed, rb.velocity.y);
 
-        if (Vector2.Distance(transform.position, currentPoint.position) < 0.5f && currentPoint == PointB.transform)
+        // Check if we've reached the current point
+        if (Mathf.Abs(transform.position.x - currentPoint.position.x) < 0.5f)
         {
-            currentPoint = PointA.transform;
+            // Switch to the other point
+            if (movingToPointB)
+            {
+                currentPoint = PointA.transform;
+            }
+            else
+            {
+                currentPoint = PointB.transform;
+            }
+            // Toggle the direction flag
+            movingToPointB = !movingToPointB;
         }
-
-          if (Vector2.Distance(transform.position, currentPoint.position) < 0.5f && currentPoint == PointA.transform)
-        {
-            currentPoint = PointB.transform;
-        }
-     
     }
-    private void OawGizmos()
+
+    private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(PointA.transform.position, 0.5f);
         Gizmos.DrawWireSphere(PointB.transform.position, 0.5f);
