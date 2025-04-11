@@ -2,57 +2,32 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    [Header("Target")]
-    public Transform followTarget;
+    public Transform player;            // The player's transform
+    public float smoothSpeed = 0.125f;  // Smooth speed for camera movement
+    public Vector3 offset;             // Camera offset (distance between camera and player)
 
-    [Header("Camera Follow Settings")]
-    public Vector2 followOffset = Vector2.zero;
-    public float followSpeed = 15f;
+    public float yFollowFactor = 0.5f; // Public float to control how much the camera follows the Y-axis (0 to 1)
 
-    [Header("Look Ahead Settings")]
-    public bool enableLookAhead = true;
-    public float lookAheadDistance = 2f;
-    public float lookAheadSmoothing = 0.1f;
+    private float initialY;             // To keep track of the initial Y position
 
-    private Vector3 currentVelocity = Vector3.zero;
-    private Vector3 lookAheadPos = Vector3.zero;
-    private Rigidbody2D rb;
-
-    void Start()
+    private void Start()
     {
-        if (followTarget == null)
-        {
-            Debug.LogError("CameraFollow: No follow target assigned!");
-            return;
-        }
-
-        rb = followTarget.GetComponent<Rigidbody2D>();
-        if (rb == null)
-        {
-            Debug.LogWarning("CameraFollow: No Rigidbody2D found on target. Look-ahead will be disabled.");
-            enableLookAhead = false;
-        }
+        // Set the initial Y position of the camera relative to the player
+        initialY = transform.position.y - player.position.y;
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        if (followTarget == null) return;
+        // Follow the player on the X-axis
+        float desiredX = player.position.x + offset.x;
+        
+        // Follow the player's Y-axis, adjusted by the yFollowFactor (0 to 1)
+        float desiredY = initialY + (player.position.y - initialY) * yFollowFactor + offset.y;
 
-        Vector3 targetPosition = followTarget.position + (Vector3)followOffset;
-
-        if (enableLookAhead && rb != null)
-        {
-            Vector3 targetLookAhead = Vector3.right * Mathf.Sign(rb.velocity.x) * lookAheadDistance;
-            lookAheadPos = Vector3.SmoothDamp(lookAheadPos, targetLookAhead, ref currentVelocity, lookAheadSmoothing);
-        }
-        else
-        {
-            lookAheadPos = Vector3.zero;
-        }
-
-        Vector3 desiredPosition = targetPosition + lookAheadPos;
-        desiredPosition.z = transform.position.z; // Keep the current camera Z (for 2D)
-
-        transform.position = Vector3.Lerp(transform.position, desiredPosition, followSpeed * Time.fixedDeltaTime);
+        // Set the new camera position
+        Vector3 desiredPosition = new Vector3(desiredX, desiredY, transform.position.z);
+        
+        // Smoothly move the camera to the desired position
+        transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
     }
 }
