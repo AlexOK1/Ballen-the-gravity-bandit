@@ -8,6 +8,7 @@ public class GameController : MonoBehaviour
     SpriteRenderer spriteRenderer;
     Rigidbody2D playerRb;
     private GameObject enemyParent; // Store the reference to the enemy parent
+    public int EnergyCount;
 
     private void Awake()
     {
@@ -25,13 +26,37 @@ public class GameController : MonoBehaviour
         if (collision.CompareTag("Obstacle"))
         {
             Die();
+            EnergyCount = 0;
+            Debug.Log("Total EnergyCount: " + EnergyCount);
+
+             GameObject collectiblesParent = GameObject.Find("Collectibles"); // Find the parent GameObject that holds all collectibles
+        if (collectiblesParent != null)
+        {
+            foreach (Transform collectible in collectiblesParent.transform) // Iterate through all child objects
+            {
+                collectible.gameObject.SetActive(true); // Enable each collectible
+            }
         }
+        else
+        {
+            Debug.LogWarning("Collectibles parent GameObject not found.");
+        }
+    }
+        
 
         // Check if the collided object is tagged as "Enemy" (the child object)
         if (collision.CompareTag("Enemy"))
         {
             Bounce(collision);
         }
+        
+        if (collision.gameObject.CompareTag("Collectible"))
+        {
+            EnergyCount++;
+            collision.gameObject.SetActive(false);
+            Debug.Log("Collectible collected! Total EnergyCount: " + EnergyCount);
+        }
+        
     }
 
     void Die()
@@ -57,6 +82,8 @@ public class GameController : MonoBehaviour
         }
     }
 
+  
+
     IEnumerator Respawn(float duration)
     {
         spriteRenderer.enabled = false;  // Disable player sprite renderer
@@ -76,4 +103,5 @@ public class GameController : MonoBehaviour
             Debug.Log("Enemy GameObject (parent) has been re-enabled.");
         }
     }
-}
+    }
+    
