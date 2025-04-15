@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
+    Animator animator;
+
     [Header("Movement Settings")]
     public float moveSpeed = 5f;
     public float jumpForce = 15f;
@@ -28,6 +30,7 @@ public class Movement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
 
     void Update()
@@ -47,7 +50,7 @@ public class Movement : MonoBehaviour
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
         isTouchingWall = Physics2D.OverlapCircle(wallCheck.position, wallCheckRadius, wallLayer);
 
-        
+        animator.SetBool("isJumping", isGrounded);
     }
 
     void FixedUpdate()
@@ -74,6 +77,9 @@ public class Movement : MonoBehaviour
 
         // Custom gravity
         ApplyCustomGravity();
+
+        animator.SetFloat("xVelocity", Mathf.Abs(rb.velocity.x));
+        animator.SetFloat("yVelocity", rb.velocity.y);
     }
 
     void ApplyCustomGravity()
@@ -101,5 +107,10 @@ public class Movement : MonoBehaviour
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(wallCheck.position, wallCheckRadius);
         }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        animator.SetBool("isJumping", !isGrounded);
     }
 }
